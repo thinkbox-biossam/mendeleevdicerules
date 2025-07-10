@@ -26,7 +26,9 @@
         }
 
         .scroll-section {
-            min-height: 100vh;
+            height: 100vh;
+            width: 100%;
+            scroll-snap-align: start;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -40,6 +42,12 @@
         .scroll-section.is-visible {
             opacity: 1;
             transform: translateY(0);
+        }
+        
+        .container-snap {
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
         }
 
         .glass-card {
@@ -72,173 +80,200 @@
             left: 0;
             color: #93c5fd;
         }
+
+        #slideshow-controls {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 50;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            padding: 0.5rem;
+        }
+        #slideshow-controls button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            font-size: 1.5rem;
+            transition: background-color 0.2s;
+        }
+        #slideshow-controls button:hover {
+            background: rgba(255,255,255,0.4);
+        }
     </style>
 </head>
 <body class="bg-black">
     <canvas id="background-particles"></canvas>
-
-    <!-- Section 1: Title -->
-    <section class="scroll-section text-center">
-        <h1 class="font-orbitron font-black text-6xl md:text-9xl bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">
-            Mendeleev Dice
-        </h1>
-        <p class="text-2xl md:text-4xl font-bold text-slate-300 mt-4">상세 규칙서</p>
-        <div class="mt-20 text-slate-500 animate-pulse">
-            <p>스크롤하여 규칙을 확인하세요</p>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mx-auto mt-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
-        </div>
-    </section>
     
-    <!-- Section 2: Intro -->
-    <section class="scroll-section">
-        <div class="text-center max-w-4xl">
-            <h2 class="text-5xl font-bold mb-8">당신은 이제 <span class="highlight">화학 공장의 공장장</span>입니다.</h2>
-            <p class="text-2xl text-slate-300 leading-relaxed">주사위를 굴려 원소를 생산하고, 생산 라인을 발전시켜 다양한 화합물을 판매하세요. 최고의 공장장이 되어 주기율표를 정복하는 것은 바로 당신입니다.</p>
-        </div>
-    </section>
+    <div id="slideshow-controls">
+        <button id="play-pause-btn">❚❚</button>
+    </div>
 
-    <!-- Section 3: Game Setup -->
-    <section class="scroll-section">
-        <div class="w-full max-w-6xl">
-            <div class="text-center mb-12">
-                <h2 class="text-5xl font-bold">⚙️ 게임 준비</h2>
+    <div id="container" class="container-snap">
+        <!-- Section 1: Title -->
+        <section id="slide-1" class="scroll-section text-center">
+            <h1 class="font-orbitron font-black text-6xl md:text-9xl bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">
+                Mendeleev Dice
+            </h1>
+            <p class="text-2xl md:text-4xl font-bold text-slate-300 mt-4">상세 규칙서</p>
+            <div class="mt-20 text-slate-500 animate-pulse">
+                <p>자동으로 스크롤됩니다. (10초 간격)</p>
             </div>
-            <div class="glass-card">
-                <div class="grid md:grid-cols-2 gap-8 text-lg">
-                    <div>
-                        <h3 class="text-3xl font-bold mb-4 highlight-blue">플레이어 준비</h3>
-                        <ul class="step-list space-y-3">
-                            <li>각자 색상을 정하고 <strong class="highlight">시작 주사위(d20, d6, d4) 3개</strong>와 <strong class="highlight">큐브 10개</strong>, <strong class="highlight">점수 토큰 1개</strong>를 받습니다.</li>
-                            <li>점수 토큰은 점수 트랙 1점 옆에, 기술 큐브는 보드 밖에 둡니다.</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h3 class="text-3xl font-bold mb-4 highlight-blue">보드 준비</h3>
-                        <ul class="step-list space-y-3">
-                            <li>기본/고급 덱에서 <strong class="highlight">'필요 원소 1개'짜리 스타터 카드</strong>를 찾아 각 덱 맨 위에 <strong class="highlight">앞면으로</strong> 올려둡니다.</li>
-                            <li>나머지 카드들은 섞어서 그 아래에 놓습니다.</li>
-                            <li>기본/고급 덱에서 각각 4장씩, 총 8장을 펼쳐 <strong class="highlight">'공개 시장'</strong>을 만듭니다.</li>
-                        </ul>
-                    </div>
-                </div>
+        </section>
+        
+        <!-- Section 2: Intro -->
+        <section id="slide-2" class="scroll-section">
+            <div class="text-center max-w-4xl">
+                <h2 class="text-5xl font-bold mb-8">당신은 이제 <span class="highlight">화학 공장의 공장장</span>입니다.</h2>
+                <p class="text-2xl text-slate-300 leading-relaxed">주사위를 굴려 원소를 생산하고, 생산 라인을 발전시켜 다양한 화합물을 판매하세요. 최고의 공장장이 되어 주기율표를 정복하는 것은 바로 당신입니다.</p>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Section 4: Production Phase -->
-    <section class="scroll-section">
-        <div class="w-full max-w-6xl">
-            <div class="text-center mb-12">
-                <h2 class="text-5xl font-bold">1️⃣ 생산 단계 (모두 동시 진행)</h2>
-                <p class="text-2xl mt-4 text-slate-300">모든 플레이어는 자신의 주사위를 굴려 원소를 생산합니다.</p>
-            </div>
-            <div class="grid md:grid-cols-2 gap-8">
-                <div class="glass-card">
-                    <h3 class="text-3xl font-bold mb-4 highlight-blue">ⓐ 원자번호 결정하기</h3>
-                    <p class="mb-4">가진 주사위 중 3개를 굴린 후, 아래 방법 중 <strong class="highlight">한 가지만 선택</strong>합니다.</p>
-                    <div class="bg-black/20 p-4 rounded-lg mb-4">
-                        <p class="font-bold text-xl">방법 1: 단일 주사위 🎲</p>
-                        <p>주사위 1개의 값을 그대로 사용합니다. (예: d20 → 18)</p>
-                    </div>
-                    <div class="bg-black/20 p-4 rounded-lg">
-                        <p class="font-bold text-xl">방법 2: 주사위 2개 연산 🔢</p>
-                        <p>주사위 2개를 골라 연산합니다. (예: d6(6) + d4(1) = 7)</p>
-                    </div>
+        <!-- Section 3: Game Setup -->
+        <section id="slide-3" class="scroll-section">
+            <div class="w-full max-w-6xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-5xl font-bold">⚙️ 게임 준비</h2>
                 </div>
                 <div class="glass-card">
-                    <h3 class="text-3xl font-bold mb-4 highlight-blue">ⓑ 생산 큐브 배치하기</h3>
-                    <ul class="step-list space-y-4 text-lg">
-                        <li><strong class="highlight">기본 배치:</strong> 결정한 원자번호의 빈칸에 큐브 1개를 놓습니다.</li>
-                        <li><strong class="highlight">중복 생산:</strong> 이미 내 큐브가 있는 곳이라면, <strong class="highlight-blue">인접한(가로/세로) 빈칸</strong>에 대신 놓을 수 있습니다.</li>
-                        <li><strong class="highlight">큐브 소진 시:</strong> 큐브 6개를 모두 사용했다면, 기존 큐브 하나를 회수하여 새 위치에 놓습니다.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section 5: Sales Phase -->
-    <section class="scroll-section">
-        <div class="w-full max-w-6xl">
-            <div class="text-center mb-12">
-                <h2 class="text-5xl font-bold">2️⃣ 판매 단계 (순서대로 진행)</h2>
-                <p class="text-2xl mt-4 text-slate-300">자신의 차례에 화합물 카드를 판매하고 보상을 얻습니다.</p>
-            </div>
-            <div class="glass-card">
-                <div class="grid md:grid-cols-2 gap-8 items-start">
-                    <div>
-                        <h3 class="text-3xl font-bold mb-4 highlight-blue">ⓐ 카드 판매하기</h3>
-                        <p class="text-lg">공개 시장의 카드 중, 필요 원소 모두에 내 큐브가 놓인 카드 1장을 판매할 수 있습니다. 판매 후, 해당 덱에서 카드를 보충합니다.</p>
-                        <p class="mt-2 text-slate-400 text-sm">※ 큐브는 '생산 중' 표식이며, 판매 시 사라지지 않습니다.</p>
-                    </div>
-                    <div>
-                        <h3 class="text-3xl font-bold mb-4 highlight-blue">ⓑ 점수와 보상 얻기</h3>
-                        <p class="text-lg mb-4">카드 점수만큼 점수 토큰을 전진시키고, 특정 칸을 통과하면 보상을 받습니다.</p>
-                        <div class="bg-orange-500/20 p-4 rounded-lg mb-4">
-                            <p class="font-bold text-xl text-orange-300">🧡 주황 칸 (5, 10, 20, 40점) 통과 시</p>
-                            <p>공용 풀에서 원하는 <strong class="highlight">주사위 1개</strong>를 추가로 얻습니다.</p>
+                    <div class="grid md:grid-cols-2 gap-8 text-lg">
+                        <div>
+                            <h3 class="text-3xl font-bold mb-4 highlight-blue">플레이어 준비</h3>
+                            <ul class="step-list space-y-3">
+                                <li>각자 색상을 정하고 <strong class="highlight">시작 주사위(d20, d6, d4) 3개</strong>와 <strong class="highlight">큐브 10개</strong>, <strong class="highlight">점수 토큰 1개</strong>를 받습니다.</li>
+                                <li>점수 토큰은 점수 트랙 1점 옆에, 기술 큐브는 보드 밖에 둡니다.</li>
+                            </ul>
                         </div>
-                        <div class="bg-purple-500/20 p-4 rounded-lg">
-                            <p class="font-bold text-xl text-purple-300">🖤 검은 칸 (10, 20, 30, 40점) 통과 시</p>
-                            <p>강력한 <strong class="highlight">기술 1개</strong>를 영구적으로 획득합니다.</p>
+                        <div>
+                            <h3 class="text-3xl font-bold mb-4 highlight-blue">보드 준비</h3>
+                            <ul class="step-list space-y-3">
+                                <li>기본/고급 덱에서 <strong class="highlight">'필요 원소 1개'짜리 스타터 카드</strong>를 찾아 각 덱 맨 위에 <strong class="highlight">앞면으로</strong> 올려둡니다.</li>
+                                <li>나머지 카드들은 섞어서 그 아래에 놓습니다.</li>
+                                <li>기본/고급 덱에서 각각 4장씩, 총 8장을 펼쳐 <strong class="highlight">'공개 시장'</strong>을 만듭니다.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Section 6: 1-Round Example -->
-    <section class="scroll-section">
-        <div class="w-full max-w-7xl">
-            <div class="text-center mb-12">
-                <h2 class="text-5xl font-bold">👨‍👩‍👧‍👦 1라운드 예시 (4인 플레이)</h2>
-            </div>
-            <div class="glass-card">
-                <h3 class="text-3xl font-bold mb-4 text-center highlight-blue">1. 생산 단계 (모두 동시)</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
-                    <div class="bg-red-500/20 p-4 rounded-lg"><p class="font-bold text-xl">플레이어 A</p><p>d20에서 <strong class="highlight">11</strong>이 나와<br>Na(나트륨) 생산</p></div>
-                    <div class="bg-blue-500/20 p-4 rounded-lg"><p class="font-bold text-xl">플레이어 B</p><p>d20에서 <strong class="highlight">2</strong>가 나와<br>He(헬륨) 생산</p></div>
-                    <div class="bg-green-500/20 p-4 rounded-lg"><p class="font-bold text-xl">플레이어 C</p><p>d20에서 <strong class="highlight">13</strong>이 나와<br>Al(알루미늄) 생산</p></div>
-                    <div class="bg-yellow-500/20 p-4 rounded-lg"><p class="font-bold text-xl">플레이어 D</p><p>d6에서 <strong class="highlight">6</strong>이 나와<br>C(탄소) 생산</p></div>
+        <!-- Section 4: Production Phase -->
+        <section id="slide-4" class="scroll-section">
+            <div class="w-full max-w-6xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-5xl font-bold">1️⃣ 생산 단계 (모두 동시 진행)</h2>
+                    <p class="text-2xl mt-4 text-slate-300">모든 플레이어는 자신의 주사위를 굴려 원소를 생산합니다.</p>
                 </div>
-
-                <h3 class="text-3xl font-bold my-8 text-center highlight">2. 판매 단계 (순서대로)</h3>
-                <p class="text-center mb-4">현재 공개 시장에는 <strong class="highlight">'네온사인(Ne)', '헬륨가스(He)', '캔(Al)', '그래핀(C)'</strong> 카드가 있습니다.</p>
-                <div class="space-y-4 text-lg">
-                    <p><strong class="text-red-400">A의 턴:</strong> Na(나트륨)으로는 판매할 카드가 없습니다. 턴을 마칩니다.</p>
-                    <p><strong class="text-blue-400">B의 턴:</strong> He(헬륨)에 큐브가 있으므로 <strong class="highlight">'헬륨가스'</strong> 카드를 판매! <strong class="highlight">1점</strong>을 얻습니다. 🎉</p>
-                    <p><strong class="text-green-400">C의 턴:</strong> Al(알루미늄)에 큐브가 있으므로 <strong class="highlight">'캔'</strong> 카드를 판매! <strong class="highlight">3점</strong>을 얻습니다. 🎉</p>
-                    <p><strong class="text-yellow-400">D의 턴:</strong> C(탄소)에 큐브가 있으므로 <strong class="highlight">'그래핀'</strong> 카드를 판매! <strong class="highlight">3점</strong>을 얻습니다. 🎉</p>
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="glass-card">
+                        <h3 class="text-3xl font-bold mb-4 highlight-blue">ⓐ 원자번호 결정하기</h3>
+                        <p class="mb-4">가진 주사위 중 3개를 굴린 후, 아래 방법 중 <strong class="highlight">한 가지만 선택</strong>합니다.</p>
+                        <div class="bg-black/20 p-4 rounded-lg mb-4">
+                            <p class="font-bold text-xl">방법 1: 단일 주사위 🎲</p>
+                            <p>주사위 1개의 값을 그대로 사용합니다. (예: d20 → 18)</p>
+                        </div>
+                        <div class="bg-black/20 p-4 rounded-lg">
+                            <p class="font-bold text-xl">방법 2: 주사위 2개 연산 🔢</p>
+                            <p>주사위 2개를 골라 연산합니다. (예: d6(6) + d4(1) = 7)</p>
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <h3 class="text-3xl font-bold mb-4 highlight-blue">ⓑ 생산 큐브 배치하기</h3>
+                        <ul class="step-list space-y-4 text-lg">
+                            <li><strong class="highlight">기본 배치:</strong> 결정한 원자번호의 빈칸에 큐브 1개를 놓습니다.</li>
+                            <li><strong class="highlight">중복 생산:</strong> 이미 내 큐브가 있는 곳이라면, <strong class="highlight-blue">인접한(가로/세로) 빈칸</strong>에 대신 놓을 수 있습니다.</li>
+                            <li><strong class="highlight">큐브 소진 시:</strong> 큐브 6개를 모두 사용했다면, 기존 큐브 하나를 회수하여 새 위치에 놓습니다.</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Section 7: Technology Cards -->
-    <section class="scroll-section">
-        <div class="text-center max-w-6xl">
-            <h2 class="text-5xl font-bold mb-8">게임의 판도를 바꾸는 <span class="highlight">4가지 기술</span></h2>
-            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="tech-card glass-card text-center p-6"><p class="font-orbitron text-6xl font-bold mb-4">✶</p><h3 class="text-2xl font-bold">배수/나눗셈</h3><p class="mt-2 text-slate-300">더 넓은 범위의 숫자를 창조합니다.</p><div class="tech-animation-overlay"><span class="text-2xl">6 🎲 × 4 🎲 = 24</span></div></div>
-                <div class="tech-card glass-card text-center p-6"><p class="font-orbitron text-6xl font-bold mb-4">⧖</p><h3 class="text-2xl font-bold">자리붙이기</h3><p class="mt-2 text-slate-300">두 눈을 이어붙여 두 자릿수를 만듭니다.</p><div class="tech-animation-overlay"><span class="text-2xl">2 🎲 + 3 🎲 → 23</span></div></div>
-                <div class="tech-card glass-card text-center p-6"><p class="font-orbitron text-6xl font-bold mb-4">↔</p><h3 class="text-2xl font-bold">슬라이드</h3><p class="mt-2 text-slate-300">큐브를 이동시켜 위치를 최적화합니다.</p><div class="tech-animation-overlay"><span class="text-2xl">⬛ → 🟦</span></div></div>
-                <div class="tech-card glass-card text-center p-6"><p class="font-orbitron text-6xl font-bold mb-4">🄧</p><h3 class="text-2xl font-bold">외주 생산</h3><p class="mt-2 text-slate-300">상대방의 원소를 빌려 카드를 완성합니다.</p><div class="tech-animation-overlay"><span class="text-2xl">내 큐브 + <span class="text-red-400">남의 큐브</span> = 판매!</span></div></div>
+        <!-- Section 5: Sales Phase -->
+        <section id="slide-5" class="scroll-section">
+            <div class="w-full max-w-6xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-5xl font-bold">2️⃣ 판매 단계 (순서대로 진행)</h2>
+                    <p class="text-2xl mt-4 text-slate-300">자신의 차례에 화합물 카드를 판매하고 보상을 얻습니다.</p>
+                </div>
+                <div class="glass-card">
+                    <div class="grid md:grid-cols-2 gap-8 items-start">
+                        <div>
+                            <h3 class="text-3xl font-bold mb-4 highlight-blue">ⓐ 카드 판매하기</h3>
+                            <p class="text-lg">공개 시장의 카드 중, 필요 원소 모두에 내 큐브가 놓인 카드 1장을 판매할 수 있습니다. 판매 후, 해당 덱에서 카드를 보충합니다.</p>
+                            <p class="mt-2 text-slate-400 text-sm">※ 큐브는 '생산 중' 표식이며, 판매 시 사라지지 않습니다.</p>
+                        </div>
+                        <div>
+                            <h3 class="text-3xl font-bold mb-4 highlight-blue">ⓑ 점수와 보상 얻기</h3>
+                            <p class="text-lg mb-4">카드 점수만큼 점수 토큰을 전진시키고, 특정 칸을 통과하면 보상을 받습니다.</p>
+                            <div class="bg-orange-500/20 p-4 rounded-lg mb-4">
+                                <p class="font-bold text-xl text-orange-300">🧡 주황 칸 (5, 10, 20, 40점) 통과 시</p>
+                                <p>공용 풀에서 원하는 <strong class="highlight">주사위 1개</strong>를 추가로 얻습니다.</p>
+                            </div>
+                            <div class="bg-purple-500/20 p-4 rounded-lg">
+                                <p class="font-bold text-xl text-purple-300">🖤 검은 칸 (10, 20, 30, 40점) 통과 시</p>
+                                <p>강력한 <strong class="highlight">기술 1개</strong>를 영구적으로 획득합니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
-    
-    <!-- Section 8: End Game -->
-    <section class="scroll-section">
-        <div class="text-center max-w-4xl">
-            <h2 class="text-5xl font-bold mb-8">최후의 승자는?</h2>
-            <div class="glass-card">
-                <p class="text-2xl">누군가 <span class="highlight">50점</span>을 달성한 라운드가 끝나면 게임이 종료됩니다.</p>
-                <p class="text-2xl mt-4">최종 점수는 <span class="highlight-blue">(카드 점수 총합) + (모은 원소 색상 종류 수)</span>로 계산합니다.</p>
-                <p class="text-3xl mt-8 font-bold">주기율표를 정복할 준비가 되셨나요?</p>
+        </section>
+
+        <!-- Section 6: 1-Round Example -->
+        <section id="slide-6" class="scroll-section">
+            <div class="w-full max-w-7xl">
+                <div class="text-center mb-12">
+                    <h2 class="text-5xl font-bold">👨‍👩‍👧‍👦 1라운드 예시 (4인 플레이)</h2>
+                </div>
+                <div class="glass-card">
+                    <h3 class="text-3xl font-bold mb-4 text-center highlight-blue">1. 생산 단계 (모두 동시)</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
+                        <div class="bg-red-500/20 p-4 rounded-lg"><p class="font-bold text-xl">플레이어 A</p><p>d20에서 <strong class="highlight">11</strong>이 나와<br>Na(나트륨) 생산</p></div>
+                        <div class="bg-blue-500/20 p-4 rounded-lg"><p class="font-bold text-xl">플레이어 B</p><p>d20에서 <strong class="highlight">2</strong>가 나와<br>He(헬륨) 생산</p></div>
+                        <div class="bg-green-500/20 p-4 rounded-lg"><p class="font-bold text-xl">플레이어 C</p><p>d20에서 <strong class="highlight">13</strong>이 나와<br>Al(알루미늄) 생산</p></div>
+                        <div class="bg-yellow-500/20 p-4 rounded-lg"><p class="font-bold text-xl">플레이어 D</p><p>d6에서 <strong class="highlight">6</strong>이 나와<br>C(탄소) 생산</p></div>
+                    </div>
+
+                    <h3 class="text-3xl font-bold my-8 text-center highlight">2. 판매 단계 (순서대로)</h3>
+                    <p class="text-center mb-4">현재 공개 시장에는 <strong class="highlight">'네온사인(Ne)', '헬륨가스(He)', '캔(Al)', '그래핀(C)'</strong> 카드가 있습니다.</p>
+                    <div class="space-y-4 text-lg">
+                        <p><strong class="text-red-400">A의 턴:</strong> Na(나트륨)으로는 판매할 카드가 없습니다. 턴을 마칩니다.</p>
+                        <p><strong class="text-blue-400">B의 턴:</strong> He(헬륨)에 큐브가 있으므로 <strong class="highlight">'헬륨가스'</strong> 카드를 판매! <strong class="highlight">1점</strong>을 얻습니다. 🎉</p>
+                        <p><strong class="text-green-400">C의 턴:</strong> Al(알루미늄)에 큐브가 있으므로 <strong class="highlight">'캔'</strong> 카드를 판매! <strong class="highlight">3점</strong>을 얻습니다. 🎉</p>
+                        <p><strong class="text-yellow-400">D의 턴:</strong> C(탄소)에 큐브가 있으므로 <strong class="highlight">'그래핀'</strong> 카드를 판매! <strong class="highlight">3점</strong>을 얻습니다. 🎉</p>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+        <!-- Section 7: Technology Cards -->
+        <section id="slide-7" class="scroll-section">
+            <div class="text-center max-w-6xl">
+                <h2 class="text-5xl font-bold mb-8">게임의 판도를 바꾸는 <span class="highlight">4가지 기술</span></h2>
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="tech-card glass-card text-center p-6"><p class="font-orbitron text-6xl font-bold mb-4">✶</p><h3 class="text-2xl font-bold">배수/나눗셈</h3><p class="mt-2 text-slate-300">더 넓은 범위의 숫자를 창조합니다.</p><div class="tech-animation-overlay"><span class="text-2xl">6 🎲 × 4 🎲 = 24</span></div></div>
+                    <div class="tech-card glass-card text-center p-6"><p class="font-orbitron text-6xl font-bold mb-4">⧖</p><h3 class="text-2xl font-bold">자리붙이기</h3><p class="mt-2 text-slate-300">두 눈을 이어붙여 두 자릿수를 만듭니다.</p><div class="tech-animation-overlay"><span class="text-2xl">2 🎲 + 3 � → 23</span></div></div>
+                    <div class="tech-card glass-card text-center p-6"><p class="font-orbitron text-6xl font-bold mb-4">↔</p><h3 class="text-2xl font-bold">슬라이드</h3><p class="mt-2 text-slate-300">큐브를 이동시켜 위치를 최적화합니다.</p><div class="tech-animation-overlay"><span class="text-2xl">⬛ → 🟦</span></div></div>
+                    <div class="tech-card glass-card text-center p-6"><p class="font-orbitron text-6xl font-bold mb-4">🄧</p><h3 class="text-2xl font-bold">외주 생산</h3><p class="mt-2 text-slate-300">상대방의 원소를 빌려 카드를 완성합니다.</p><div class="tech-animation-overlay"><span class="text-2xl">내 큐브 + <span class="text-red-400">남의 큐브</span> = 판매!</span></div></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 8: End Game -->
+        <section id="slide-8" class="scroll-section">
+            <div class="text-center max-w-4xl">
+                <h2 class="text-5xl font-bold mb-8">최후의 승자는?</h2>
+                <div class="glass-card">
+                    <p class="text-2xl">누군가 <span class="highlight">50점</span>을 달성한 라운드가 끝나면 게임이 종료됩니다.</p>
+                    <p class="text-2xl mt-4">최종 점수는 <span class="highlight-blue">(카드 점수 총합) + (모은 원소 색상 종류 수)</span>로 계산합니다.</p>
+                    <p class="text-3xl mt-8 font-bold">주기율표를 정복할 준비가 되셨나요?</p>
+                </div>
+            </div>
+        </section>
+    </div>
 
 
 <script>
@@ -300,7 +335,6 @@ document.addEventListener('DOMContentLoaded', () => {
         initParticles();
     });
 
-
     // --- Section Fade-in on Scroll ---
     const sections = document.querySelectorAll('.scroll-section');
     const observer = new IntersectionObserver(entries => {
@@ -311,12 +345,63 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }, { threshold: 0.1 });
     sections.forEach(section => observer.observe(section));
+    
+    // --- Slideshow Logic ---
+    const container = document.getElementById('container');
+    const slides = document.querySelectorAll('.scroll-section');
+    const playPauseBtn = document.getElementById('play-pause-btn');
+    let currentSlide = 0;
+    let slideInterval;
+    let isPlaying = true;
 
-    // FIX: The interactive production logic was removed from the HTML, 
-    // but the script was still trying to access its elements.
-    // This entire block is now removed to prevent the error.
+    const scrollToSlide = (slideIndex) => {
+        const targetSlide = document.getElementById(`slide-${slideIndex + 1}`);
+        if (targetSlide) {
+            targetSlide.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+
+    const nextSlide = () => {
+        currentSlide = (currentSlide + 1) % slides.length;
+        scrollToSlide(currentSlide);
+    };
+
+    const startSlideshow = () => {
+        if (slideInterval) clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, 10000); // 10 seconds
+        isPlaying = true;
+        playPauseBtn.textContent = '❚❚';
+    };
+
+    const pauseSlideshow = () => {
+        clearInterval(slideInterval);
+        isPlaying = false;
+        playPauseBtn.textContent = '▶';
+    };
+
+    playPauseBtn.addEventListener('click', () => {
+        if (isPlaying) {
+            pauseSlideshow();
+        } else {
+            startSlideshow();
+        }
+    });
+
+    let userScrollTimeout;
+    container.addEventListener('scroll', () => {
+        pauseSlideshow();
+        clearTimeout(userScrollTimeout);
+        userScrollTimeout = setTimeout(() => {
+            // Restart after 15 seconds of inactivity
+            startSlideshow();
+        }, 15000);
+    });
+
+    // Start on load
+    startSlideshow();
 });
 </script>
 
 </body>
 </html>
+�
